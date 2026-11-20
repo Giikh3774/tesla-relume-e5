@@ -34,3 +34,59 @@ document.querySelectorAll("[data-signup-form]").forEach((form) => {
     success.hidden = false;
   });
 });
+
+// Hero carousel: fade between slides with arrows, dots and a slow autoplay.
+document.querySelectorAll("[data-hero-carousel]").forEach((carousel) => {
+  const slides = [...carousel.querySelectorAll("[data-hero-slide]")];
+  const dots = [...carousel.querySelectorAll("[data-hero-dot]")];
+  let index = 0;
+  let timer;
+
+  const show = (i) => {
+    index = (i + slides.length) % slides.length;
+    slides.forEach((slide, n) => {
+      slide.classList.toggle("is-active", n === index);
+      slide.setAttribute("aria-hidden", n === index ? "false" : "true");
+    });
+    dots.forEach((dot, n) => dot.setAttribute("aria-current", n === index ? "true" : "false"));
+  };
+
+  const restart = () => {
+    clearInterval(timer);
+    timer = setInterval(() => show(index + 1), 7000);
+  };
+
+  carousel.querySelector("[data-hero-prev]")?.addEventListener("click", () => { show(index - 1); restart(); });
+  carousel.querySelector("[data-hero-next]")?.addEventListener("click", () => { show(index + 1); restart(); });
+  dots.forEach((dot, n) => dot.addEventListener("click", () => { show(n); restart(); }));
+
+  show(0);
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) restart();
+});
+
+// Tabs: <button data-tab="group:key"> shows every [data-tab-panel="group:key"]
+// and hides the other panels of the same group.
+document.querySelectorAll("[data-tab]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const [group, key] = button.dataset.tab.split(":");
+    document.querySelectorAll(`[data-tab^="${group}:"]`).forEach((b) => {
+      b.setAttribute("aria-selected", b.dataset.tab === `${group}:${key}` ? "true" : "false");
+    });
+    document.querySelectorAll(`[data-tab-panel^="${group}:"]`).forEach((panel) => {
+      panel.hidden = panel.dataset.tabPanel !== `${group}:${key}`;
+    });
+  });
+});
+
+// Background videos: load and play only while on screen.
+const autoplayVideos = document.querySelectorAll("video[data-autoplay]");
+if (autoplayVideos.length && "IntersectionObserver" in window &&
+    !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) target.play().catch(() => {});
+      else target.pause();
+    });
+  }, { threshold: 0.25 });
+  autoplayVideos.forEach((video) => observer.observe(video));
+}

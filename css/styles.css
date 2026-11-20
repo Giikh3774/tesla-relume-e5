@@ -54,6 +54,11 @@ body {
   padding: 0;
 }
 
+/* `hidden` must win over component display rules (tabs, form states) */
+[hidden] {
+  display: none !important;
+}
+
 /* Smooth scroll for in-page jumps (footer «Танилцах», «Байршил») */
 html {
   scroll-behavior: smooth;
@@ -1133,6 +1138,288 @@ sup {
 }
 
 /* ==========================================================================
+   Model Y page
+   ========================================================================== */
+/* Hero carousel (slides fade, arrows + dots like tesla.com) */
+.hero-carousel {
+  position: relative;
+  height: 900px;
+  overflow: hidden;
+  background: #000;
+}
+
+.hero-carousel .hero {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+
+.hero-carousel .hero.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.hero-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: flex;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-small);
+  transform: translateY(-50%);
+}
+
+.hero-carousel__arrow:hover {
+  background: var(--color-white);
+}
+
+.hero-carousel__arrow--prev {
+  left: 24px;
+}
+
+.hero-carousel__arrow--next {
+  right: 24px;
+}
+
+.hero-carousel__dots {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  transform: translateX(-50%);
+}
+
+.hero-carousel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.hero-carousel__dot[aria-current="true"] {
+  background: var(--color-white);
+}
+
+/* Segmented tabs */
+.seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  background: var(--scheme-foreground);
+  border-radius: 8px;
+}
+
+.seg__btn {
+  padding: 8px 20px;
+  border-radius: var(--radius-button);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.seg__btn small {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.seg__btn[aria-selected="true"] {
+  background: var(--color-white);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.seg__btn:not([aria-selected="true"]):hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Explore toggle */
+.explore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.explore__media {
+  width: 100%;
+  aspect-ratio: 1280 / 560;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+}
+
+.explore__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.explore__title {
+  text-align: center;
+}
+
+.explore__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 220px));
+  justify-content: center;
+  gap: 32px;
+  text-align: center;
+}
+
+.explore__value {
+  font-family: var(--font-alt);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.1;
+}
+
+.explore__value small {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.explore__label {
+  font-size: var(--text-small);
+}
+
+/* Media blocks (image or video) */
+.media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  background: #111;
+}
+
+.media--wide {
+  aspect-ratio: 1280 / 600;
+}
+
+.media img,
+.media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Meet carousel + slide cards */
+.meet-card,
+.slide-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-snap-align: start;
+}
+
+.meet-card {
+  flex: 0 0 400px;
+}
+
+.slide-card {
+  flex: 0 0 608px;
+}
+
+.meet-card .media {
+  aspect-ratio: 4 / 3;
+}
+
+.slide-card .media {
+  aspect-ratio: 16 / 10;
+}
+
+.meet-card__label {
+  font-weight: 600;
+  font-size: var(--text-medium);
+}
+
+/* Tab text panels (Premium Comfort) */
+.text-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 768px;
+}
+
+/* Big stats row */
+.big-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.big-stats__value {
+  font-family: var(--font-alt);
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 1.1;
+}
+
+.big-stats__value small {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+/* Specs: list + image */
+.spec-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.spec-layout__media {
+  position: sticky;
+  top: 24px;
+}
+
+.spec-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 32px;
+}
+
+.spec-group h3 {
+  margin-bottom: 8px;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0;
+  padding: 12px 0;
+  border-bottom: var(--divider-width) solid var(--scheme-border);
+}
+
+.spec-row dt {
+  opacity: 0.7;
+}
+
+.spec-row dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 500;
+}
+
+.footnotes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 1200px) {
@@ -1206,6 +1493,31 @@ sup {
     grid-template-columns: 1fr;
   }
 
+  .hero-carousel {
+    height: 720px;
+  }
+
+  .spec-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .spec-layout__media {
+    position: static;
+    order: -1;
+  }
+
+  .meet-card {
+    flex-basis: 320px;
+  }
+
+  .slide-card {
+    flex-basis: 480px;
+  }
+
+  .explore__value {
+    font-size: 32px;
+  }
+
   .feature-grid,
   .feature-grid--3 {
     grid-template-columns: repeat(2, 1fr);
@@ -1266,6 +1578,35 @@ sup {
   .form__row,
   .checkbox-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-carousel {
+    height: 560px;
+  }
+
+  .hero-carousel__arrow {
+    display: none;
+  }
+
+  .explore__stats,
+  .big-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .explore__value,
+  .big-stats__value {
+    font-size: 24px;
+  }
+
+  .explore__value small,
+  .big-stats__value small {
+    font-size: 14px;
+  }
+
+  .meet-card,
+  .slide-card {
+    flex-basis: calc(100vw - 2 * var(--padding-global) - 40px);
   }
 
   .variant__value {
